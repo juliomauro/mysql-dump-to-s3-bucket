@@ -1,6 +1,6 @@
 #!/bin/sh
 ## Author: Julio Cesar Mauro
-## Date: 03-06-20128
+## Date: 03-06-2018
 ## Script to backup mysql database into AWS S3 BUCKET
 
 #### BEGIN CONFIGURATION ####
