@@ -8,6 +8,8 @@
 SRCDIR='/tmp/s3backups'
 DESTDIR='mysqldump'
 BUCKET='BUCKET-NAME'
+HRBKP=`date +"%d%m%Y-%Hh%Mm"`
+SERVER=`uname -n | cut -d\. -f1`
 
 # database access details
 HOST='MYSQL-SERVER'
@@ -23,9 +25,9 @@ cd $SRCDIR
 # dump each database to its own sql file and upload it to s3
 for DB in $(mysql -h$HOST -P$PORT -u$USER -p$PASS -BNe 'show databases' | grep -Ev 'mysql|information_schema|performance_schema')
 do
-	mysqldump -h$HOST -P$PORT -u$USER -p$PASS --quote-names --create-options --force $DB > $DB.sql
-	tar -czPf $DB.tar.gz $DB.sql
-	/usr/local/bin/aws s3 cp $SRCDIR/$DB.tar.gz s3://$BUCKET/$DESTDIR/
+	mysqldump -h$HOST -P$PORT -u$USER -p$PASS --quote-names --create-options --force $DB > $SERVER-$DB-$HRBKP.sql
+	tar -czPf $SERVER-$DB-$HRBKP.tar.gz $SERVER-$DB-$HRBKP.sql
+	/usr/local/bin/aws s3 cp $SRCDIR/$SERVER-$DB-$HRBKP.tar.gz s3://$BUCKET/$DESTDIR/
 done
 
 # remove all files in our source directory
